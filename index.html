@@ -1,283 +1,1259 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>おかね全体マップ</title>
-<meta name="theme-color" content="#14432F">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="おかねマップ">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#EEF3EF; --surface:#FFFFFF; --ink:#17231D; --muted:#5F6F67;
-    --line:#DDE6E0; --pine:#14432F; --save:#159E56;
-    --c-shared:#4C9BE0; --c-personal:#E0A32E; --c-subs:#A46FC4; --c-save:#16A34A;
-    --warn:#C0492F;
-    --jp:'Zen Kaku Gothic New',system-ui,sans-serif;
-    --num:'Outfit',system-ui,sans-serif;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{
-    background:var(--bg); color:var(--ink); font-family:var(--jp);
-    line-height:1.6; -webkit-font-smoothing:antialiased;
-    padding:calc(20px + env(safe-area-inset-top)) 16px 40px; max-width:520px; margin:0 auto;
-  }
-  header{margin-bottom:22px}
-  .title{font-size:24px; font-weight:900; letter-spacing:.01em}
-  .subtitle{font-size:13px; color:var(--muted); margin-top:4px}
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>おかね全体マップ</title>
+    <meta name="theme-color" content="#14432F" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="おかねマップ" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #eef3ef;
+        --surface: #ffffff;
+        --ink: #17231d;
+        --muted: #5f6f67;
+        --line: #dde6e0;
+        --pine: #14432f;
+        --save: #159e56;
+        --c-shared: #4c9be0;
+        --c-personal: #e0a32e;
+        --c-subs: #a46fc4;
+        --c-save: #16a34a;
+        --warn: #c0492f;
+        --jp: "Zen Kaku Gothic New", system-ui, sans-serif;
+        --num: "Outfit", system-ui, sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--jp);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        padding: calc(20px + env(safe-area-inset-top)) 16px
+          calc(40px + env(safe-area-inset-bottom));
+        max-width: 520px;
+        margin: 0 auto;
+      }
+      header {
+        margin-bottom: 22px;
+      }
+      .title {
+        font-size: 24px;
+        font-weight: 900;
+        letter-spacing: 0.01em;
+      }
+      .subtitle {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 4px;
+      }
 
-  .card{
-    background:var(--surface); border:1px solid var(--line);
-    border-radius:16px; padding:18px; margin-bottom:14px;
-  }
-  .card-head{font-size:13px; font-weight:700; color:var(--pine); margin-bottom:14px}
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 18px;
+        margin-bottom: 14px;
+      }
+      .card-head {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--pine);
+        margin-bottom: 14px;
+      }
 
-  .field{display:flex; align-items:center; gap:10px; padding:10px 0}
-  .field + .field{border-top:1px solid var(--line)}
-  .dot{width:10px; height:10px; border-radius:50%; flex:none}
-  .field-label{flex:1; min-width:0}
-  .field-name{font-size:15px; font-weight:500}
-  .field-src{font-size:11px; color:var(--muted); margin-top:1px}
-  .input-wrap{display:flex; align-items:center; gap:4px}
-  .yen{font-size:14px; color:var(--muted); font-family:var(--num); font-weight:600}
-  input{
-    width:118px; text-align:right; border:none; border-bottom:2px solid var(--line);
-    background:transparent; font-family:var(--num); font-size:19px; font-weight:600;
-    color:var(--ink); padding:4px 2px; outline:none;
-  }
-  input:focus{border-bottom-color:var(--pine)}
+      .field {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 0;
+      }
+      .field + .field {
+        border-top: 1px solid var(--line);
+      }
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        flex: none;
+      }
+      .field-label {
+        flex: 1;
+        min-width: 0;
+      }
+      .field-name {
+        font-size: 15px;
+        font-weight: 500;
+      }
+      .field-src {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 1px;
+      }
+      .input-wrap {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .yen {
+        font-size: 14px;
+        color: var(--muted);
+        font-family: var(--num);
+        font-weight: 600;
+      }
+      input {
+        width: 118px;
+        text-align: right;
+        border: none;
+        border-bottom: 2px solid var(--line);
+        background: transparent;
+        font-family: var(--num);
+        font-size: 19px;
+        font-weight: 600;
+        color: var(--ink);
+        padding: 4px 2px;
+        outline: none;
+      }
+      input:focus {
+        border-bottom-color: var(--pine);
+      }
 
-  .result{
-    background:var(--pine); color:#fff; border-radius:20px; padding:22px 20px;
-    margin-bottom:14px;
-  }
-  .result-label{font-size:13px; color:#B6D0C2; font-weight:500}
-  .hero-num{
-    font-family:var(--num); font-weight:800; font-size:44px; line-height:1.05;
-    margin:2px 0 2px; letter-spacing:-.01em;
-  }
-  .hero-num.neg{color:#F4B4A4}
-  .hero-sub{font-size:12.5px; color:#9FBEAE}
-  .hero-warn{font-size:13px; color:#F4C0B0; font-weight:500; margin-top:6px}
+      .result {
+        background: var(--pine);
+        color: #fff;
+        border-radius: 20px;
+        padding: 22px 20px;
+        margin-bottom: 14px;
+      }
+      .result-label {
+        font-size: 13px;
+        color: #b6d0c2;
+        font-weight: 500;
+      }
+      .hero-num {
+        font-family: var(--num);
+        font-weight: 800;
+        font-size: 44px;
+        line-height: 1.05;
+        margin: 2px 0 2px;
+        letter-spacing: -0.01em;
+      }
+      .hero-num.neg {
+        color: #f4b4a4;
+      }
+      .hero-sub {
+        font-size: 12.5px;
+        color: #9fbeae;
+      }
+      .hero-warn {
+        font-size: 13px;
+        color: #f4c0b0;
+        font-weight: 500;
+        margin-top: 6px;
+      }
 
-  .chart-row{display:flex; align-items:center; gap:18px; margin-top:20px;
-    padding-top:20px; border-top:1px solid rgba(255,255,255,.14)}
-  .donut{flex:none; position:relative; width:132px; height:132px}
-  .donut svg{transform:rotate(-90deg)}
-  .donut-center{position:absolute; inset:0; display:flex; flex-direction:column;
-    align-items:center; justify-content:center; text-align:center}
-  .donut-pct{font-family:var(--num); font-weight:700; font-size:26px; line-height:1}
-  .donut-cap{font-size:10px; color:#9FBEAE; margin-top:2px}
-  .legend{flex:1; display:flex; flex-direction:column; gap:9px}
-  .leg-item{display:flex; align-items:center; gap:8px; font-size:12.5px}
-  .leg-dot{width:9px;height:9px;border-radius:2px;flex:none}
-  .leg-name{color:#D6E6DD; flex:1}
-  .leg-val{font-family:var(--num); font-weight:600; color:#fff}
+      .chart-row {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.14);
+      }
+      .donut {
+        flex: none;
+        position: relative;
+        width: 132px;
+        height: 132px;
+      }
+      .donut svg {
+        transform: rotate(-90deg);
+      }
+      .donut-center {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      .donut-pct {
+        font-family: var(--num);
+        font-weight: 700;
+        font-size: 26px;
+        line-height: 1;
+      }
+      .donut-cap {
+        font-size: 10px;
+        color: #9fbeae;
+        margin-top: 2px;
+      }
+      .legend {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+      }
+      .leg-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12.5px;
+      }
+      .leg-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 2px;
+        flex: none;
+      }
+      .leg-name {
+        color: #d6e6dd;
+        flex: 1;
+      }
+      .leg-val {
+        font-family: var(--num);
+        font-weight: 600;
+        color: #fff;
+      }
 
-  .stats{display:grid; grid-template-columns:1fr 1fr; gap:10px}
-  .stat{background:var(--surface); border:1px solid var(--line);
-    border-radius:14px; padding:14px 16px}
-  .stat-cap{font-size:11.5px; color:var(--muted)}
-  .stat-num{font-family:var(--num); font-weight:700; font-size:21px; margin-top:3px}
+      .stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .stat {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 14px 16px;
+      }
+      .stat-cap {
+        font-size: 11.5px;
+        color: var(--muted);
+      }
+      .stat-num {
+        font-family: var(--num);
+        font-weight: 700;
+        font-size: 21px;
+        margin-top: 3px;
+      }
 
-  .note{font-size:11.5px; color:var(--muted); text-align:center; margin-top:18px;
-    line-height:1.7}
-</style>
-</head>
-<body>
-  <header>
-    <div class="title">おかね全体マップ</div>
-    <div class="subtitle">3つのアプリの今月の合計を入れると、貯金にまわせる額が見えます</div>
-  </header>
+      /* ==== 月ごとの記録 ==== */
+      .msel {
+        font-family: var(--jp);
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--ink);
+        border: none;
+        border-bottom: 2px solid var(--line);
+        background: transparent;
+        padding: 6px 2px;
+        outline: none;
+        text-align: right;
+        min-height: 44px;
+        flex: none;
+      }
+      .msel:focus {
+        border-bottom-color: var(--pine);
+      }
 
-  <div class="card">
-    <div class="card-head">今月の収入（手取り）</div>
-    <div class="field">
-      <span class="dot" style="background:var(--save)"></span>
-      <div class="field-label">
-        <div class="field-name">収入</div>
-        <div class="field-src">お給料など、入ってくるお金の合計</div>
+      .btn,
+      .btn-sm,
+      .btn-warn,
+      .hist-row-main,
+      .hist-del,
+      .hist-more,
+      .hist-undo button {
+        font-family: inherit;
+        -webkit-appearance: none;
+        appearance: none;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-user-select: none;
+        user-select: none;
+        touch-action: manipulation;
+        cursor: pointer;
+      }
+
+      .btn {
+        display: block;
+        width: 100%;
+        margin-top: 14px;
+        height: 48px;
+        border: none;
+        border-radius: 14px;
+        background: var(--pine);
+        color: #fff;
+        font-size: 15px;
+        font-weight: 700;
+      }
+      .btn:active {
+        transform: translateY(1px);
+        filter: brightness(0.92);
+      }
+      .btn:disabled {
+        background: var(--line);
+        color: var(--muted);
+      }
+
+      .btn-sm {
+        border: 1px solid var(--line);
+        background: transparent;
+        color: var(--ink);
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 0 14px;
+        height: 40px;
+      }
+      .btn-warn {
+        border: none;
+        background: var(--warn);
+        color: #fff;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 0 14px;
+        height: 40px;
+      }
+
+      .record-note {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 10px;
+        line-height: 1.6;
+      }
+      .record-msg {
+        font-size: 13px;
+        font-weight: 600;
+        margin-top: 10px;
+      }
+      .record-msg.ok {
+        color: var(--save);
+      }
+      .record-msg.warn {
+        color: var(--warn);
+      }
+
+      /* ==== 貯金額の推移 ==== */
+      .hist-sub {
+        font-size: 12px;
+        color: var(--muted);
+        margin-bottom: 4px;
+      }
+      .hist-note {
+        font-size: 11px;
+        color: var(--muted);
+        text-align: center;
+        margin-top: 6px;
+      }
+      .linechart {
+        display: block;
+        width: 100%;
+        max-width: 340px;
+        height: auto;
+        margin: 8px auto 0;
+        touch-action: manipulation;
+      }
+
+      .empty {
+        border: 1px dashed var(--line);
+        border-radius: 12px;
+        padding: 28px 16px;
+        text-align: center;
+        font-size: 12.5px;
+        color: var(--muted);
+        line-height: 1.8;
+        min-height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .hist-list {
+        margin-top: 14px;
+      }
+      .hist-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 0;
+        border-top: 1px solid var(--line);
+      }
+      .hist-row:first-child {
+        border-top: none;
+      }
+      .hist-row-main {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+        background: none;
+        border: none;
+        padding: 0;
+        text-align: left;
+      }
+      .hist-month {
+        font-size: 14px;
+        font-weight: 500;
+        flex: none;
+        width: 84px;
+      }
+      .hist-val {
+        font-family: var(--num);
+        font-weight: 700;
+        font-size: 16px;
+        flex: 1;
+        text-align: right;
+      }
+      .hist-val.warn {
+        color: var(--warn);
+      }
+      .hist-del {
+        flex: none;
+        width: 44px;
+        height: 44px;
+        background: none;
+        border: none;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .hist-detail {
+        padding: 0 0 12px;
+        font-size: 12.5px;
+        color: var(--muted);
+        line-height: 2;
+      }
+      .hist-detail-row {
+        display: flex;
+        justify-content: space-between;
+      }
+      .hist-detail-val {
+        font-family: var(--num);
+        font-weight: 600;
+        color: var(--ink);
+      }
+      .hist-actions {
+        margin-top: 8px;
+      }
+
+      .hist-confirm {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 12px 0;
+        border-top: 1px solid var(--line);
+        font-size: 13px;
+      }
+      .hist-confirm-btns {
+        display: flex;
+        gap: 8px;
+        flex: none;
+      }
+
+      .hist-more {
+        display: block;
+        width: 100%;
+        margin-top: 8px;
+        background: none;
+        border: none;
+        color: var(--pine);
+        font-size: 13px;
+        font-weight: 700;
+        padding: 10px 0;
+      }
+
+      .hist-undo {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        background: var(--bg);
+        border-radius: 10px;
+        padding: 10px 12px;
+        margin-bottom: 4px;
+        font-size: 12.5px;
+        color: var(--muted);
+      }
+      .hist-undo button {
+        background: none;
+        border: none;
+        color: var(--pine);
+        font-weight: 700;
+        font-size: 12.5px;
+      }
+
+      .note {
+        font-size: 11.5px;
+        color: var(--muted);
+        text-align: center;
+        margin-top: 18px;
+        line-height: 1.7;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="title">おかね全体マップ</div>
+      <div class="subtitle">
+        3つのアプリの今月の合計を入れると、貯金にまわせる額が見えます
       </div>
-      <div class="input-wrap"><span class="yen">¥</span>
-        <input id="income" inputmode="numeric" placeholder="0"></div>
-    </div>
-  </div>
+    </header>
 
-  <div class="card">
-    <div class="card-head">今月の支出</div>
-    <div class="field">
-      <span class="dot" style="background:var(--c-shared)"></span>
-      <div class="field-label">
-        <div class="field-name">共通生活費</div>
-        <div class="field-src">シェアルーの合計</div>
-      </div>
-      <div class="input-wrap"><span class="yen">¥</span>
-        <input id="shared" inputmode="numeric" placeholder="0"></div>
-    </div>
-    <div class="field">
-      <span class="dot" style="background:var(--c-personal)"></span>
-      <div class="field-label">
-        <div class="field-name">個人の支出</div>
-        <div class="field-src">毎日家計簿の合計</div>
-      </div>
-      <div class="input-wrap"><span class="yen">¥</span>
-        <input id="personal" inputmode="numeric" placeholder="0"></div>
-    </div>
-    <div class="field">
-      <span class="dot" style="background:var(--c-subs)"></span>
-      <div class="field-label">
-        <div class="field-name">サブスク</div>
-        <div class="field-src">サブスクBoxの合計</div>
-      </div>
-      <div class="input-wrap"><span class="yen">¥</span>
-        <input id="subs" inputmode="numeric" placeholder="0"></div>
-    </div>
-  </div>
-
-  <div class="result">
-    <div class="result-label">今月、貯金にまわせる額</div>
-    <div class="hero-num" id="savingNum">¥0</div>
-    <div class="hero-sub" id="heroSub">収入と支出を入れると計算されます</div>
-    <div class="hero-warn" id="heroWarn" style="display:none"></div>
-
-    <div class="chart-row">
-      <div class="donut">
-        <svg width="132" height="132" viewBox="0 0 132 132" id="donutSvg">
-          <circle cx="66" cy="66" r="52" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="20"/>
-        </svg>
-        <div class="donut-center">
-          <div class="donut-pct" id="rate">0%</div>
-          <div class="donut-cap">貯金にまわる<br>割合</div>
+    <div class="card">
+      <div class="card-head">今月の収入（手取り）</div>
+      <div class="field">
+        <span class="dot" style="background: var(--save)"></span>
+        <div class="field-label">
+          <div class="field-name">収入</div>
+          <div class="field-src">お給料など、入ってくるお金の合計</div>
+        </div>
+        <div class="input-wrap">
+          <span class="yen">¥</span>
+          <input id="income" inputmode="numeric" placeholder="0" />
         </div>
       </div>
-      <div class="legend" id="legend"></div>
     </div>
-  </div>
 
-  <div class="stats">
-    <div class="stat">
-      <div class="stat-cap">支出の合計</div>
-      <div class="stat-num" id="totalExp">¥0</div>
+    <div class="card">
+      <div class="card-head">今月の支出</div>
+      <div class="field">
+        <span class="dot" style="background: var(--c-shared)"></span>
+        <div class="field-label">
+          <div class="field-name">共通生活費</div>
+          <div class="field-src">シェアルーの合計</div>
+        </div>
+        <div class="input-wrap">
+          <span class="yen">¥</span>
+          <input id="shared" inputmode="numeric" placeholder="0" />
+        </div>
+      </div>
+      <div class="field">
+        <span class="dot" style="background: var(--c-personal)"></span>
+        <div class="field-label">
+          <div class="field-name">個人の支出</div>
+          <div class="field-src">毎日家計簿の合計</div>
+        </div>
+        <div class="input-wrap">
+          <span class="yen">¥</span>
+          <input id="personal" inputmode="numeric" placeholder="0" />
+        </div>
+      </div>
+      <div class="field">
+        <span class="dot" style="background: var(--c-subs)"></span>
+        <div class="field-label">
+          <div class="field-name">サブスク</div>
+          <div class="field-src">サブスクBoxの合計</div>
+        </div>
+        <div class="input-wrap">
+          <span class="yen">¥</span>
+          <input id="subs" inputmode="numeric" placeholder="0" />
+        </div>
+      </div>
     </div>
-    <div class="stat">
-      <div class="stat-cap">この調子だと1年で</div>
-      <div class="stat-num" id="yearly">¥0</div>
+
+    <div class="result">
+      <div class="result-label">今月、貯金にまわせる額</div>
+      <div class="hero-num" id="savingNum">¥0</div>
+      <div class="hero-sub" id="heroSub">収入と支出を入れると計算されます</div>
+      <div class="hero-warn" id="heroWarn" style="display: none"></div>
+
+      <div class="chart-row">
+        <div class="donut">
+          <svg width="132" height="132" viewBox="0 0 132 132" id="donutSvg">
+            <circle
+              cx="66"
+              cy="66"
+              r="52"
+              fill="none"
+              stroke="rgba(255,255,255,.12)"
+              stroke-width="20"
+            />
+          </svg>
+          <div class="donut-center">
+            <div class="donut-pct" id="rate">0%</div>
+            <div class="donut-cap">貯金にまわる<br />割合</div>
+          </div>
+        </div>
+        <div class="legend" id="legend"></div>
+      </div>
     </div>
-  </div>
 
-  <div class="note">
-    入力したお金はこの端末にだけ保存されます。<br>毎月、数字を入れ替えて使ってください。
-  </div>
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-cap">支出の合計</div>
+        <div class="stat-num" id="totalExp">¥0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-cap">この調子だと1年で</div>
+        <div class="stat-num" id="yearly">¥0</div>
+      </div>
+    </div>
 
-<script>
-  const R = 52, C = 2 * Math.PI * R;
-  const cats = [
-    {id:'shared',   name:'共通生活費', color:'#4C9BE0'},
-    {id:'personal', name:'個人の支出', color:'#E0A32E'},
-    {id:'subs',     name:'サブスク',   color:'#A46FC4'},
-  ];
-  const ids = ['income','shared','personal','subs'];
-  const yen = n => '¥' + Math.round(n).toLocaleString('ja-JP');
+    <div class="card" id="recordCard">
+      <div class="card-head">月ごとの記録</div>
+      <div class="field">
+        <div class="field-label">
+          <div class="field-name">記録する月</div>
+          <div class="field-src">選んだ月の記録として保存します</div>
+        </div>
+        <select id="monthSel" class="msel"></select>
+      </div>
+      <button type="button" class="btn" id="recordBtn">この月を記録する</button>
+      <div class="record-note" id="recordNote" style="display: none"></div>
+      <div class="record-msg" id="recordMsg" style="display: none"></div>
+    </div>
 
-  function num(id){
-    const v = document.getElementById(id).value.replace(/[^0-9]/g,'');
-    return v ? parseInt(v,10) : 0;
-  }
+    <div class="card" id="historyCard">
+      <div class="card-head">貯金額の推移</div>
+      <div class="hist-sub">記録した月の「貯金にまわせた額」です</div>
+      <div id="histChartArea"></div>
+      <div id="histListArea"></div>
+    </div>
 
-  function save(){
-    const data = {};
-    ids.forEach(id => data[id] = num(id));
-    try { localStorage.setItem('okane:v1', JSON.stringify(data)); } catch(e){}
-  }
+    <div class="note">
+      入力したお金はこの端末にだけ保存されます。<br />長く使わないと消えることがあるので、大事な記録は控えを取ってください。
+    </div>
 
-  function load(){
-    try {
-      const raw = localStorage.getItem('okane:v1');
-      if (raw){
-        const d = JSON.parse(raw);
-        ids.forEach(id => { if (d[id]) document.getElementById(id).value = d[id]; });
+    <script>
+      // ========== 基本設定 ==========
+      const R = 52,
+        C = 2 * Math.PI * R;
+      const cats = [
+        { id: "shared", name: "共通生活費", color: "#4C9BE0" },
+        { id: "personal", name: "個人の支出", color: "#E0A32E" },
+        { id: "subs", name: "サブスク", color: "#A46FC4" },
+      ];
+      const ids = ["income", "shared", "personal", "subs"];
+      const KEYS = {
+        input: "okane:v1",
+        history: "okane:history:v1",
+        broken: "okane:history:broken",
+      };
+
+      // 画面の状態。renderHistory() が innerHTML でまるごと描き直す作りなので、
+      // 「どの月を開いているか」などはDOMではなく変数で持つ（描き直すたびに消えないようにするため）
+      let historyBroken = false; // 履歴が読み込めなかったか
+      let selectedMonth = null; // グラフ／リストで内訳を開いている月
+      let pendingDelete = null; // 「消しますか？」を表示中の月
+      let pendingDeleteTimer = null; // 上の確認を自動で引き戻すタイマー
+      let showAllHistory = false; // 月の一覧を全件表示しているか
+      let undoRecord = null; // 削除の取り消し用に一時保持する記録 {key, rec, timer}
+
+      // 数字を「¥12,345」「−¥12,345」の形にする。壊れた値が来てもNaNを出さない
+      const yen = (n) => {
+        n = Number(n) || 0;
+        return (
+          (n < 0 ? "−" : "") +
+          "¥" +
+          Math.abs(Math.round(n)).toLocaleString("ja-JP")
+        );
+      };
+      // 文字列の中の < > & " を無害な形に変える（将来カテゴリ名を自由入力にしたときの表示崩れ対策）
+      const esc = (s) =>
+        String(s).replace(
+          /[&<>"]/g,
+          (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c],
+        );
+
+      function num(id) {
+        const v = document.getElementById(id).value.replace(/[^0-9]/g, "");
+        return v ? parseInt(v, 10) : 0;
       }
-    } catch(e){}
-    render();
-  }
 
-  function render(){
-    const income = num('income');
-    const parts = cats.map(c => ({...c, val: num(c.id)}));
-    const totalExp = parts.reduce((s,p)=>s+p.val, 0);
-    const saving = income - totalExp;
+      // ========== 今月の入力欄 ==========
+      function save() {
+        const data = {};
+        ids.forEach((id) => (data[id] = num(id)));
+        try {
+          localStorage.setItem(KEYS.input, JSON.stringify(data));
+        } catch (e) {}
+      }
 
-    document.getElementById('totalExp').textContent = yen(totalExp);
+      function load() {
+        try {
+          const raw = localStorage.getItem(KEYS.input);
+          if (raw) {
+            const d = JSON.parse(raw);
+            // != null にすることで「0」もちゃんと復元する（0は「値がない」ではないため）
+            ids.forEach((id) => {
+              if (d[id] != null) document.getElementById(id).value = d[id];
+            });
+          }
+        } catch (e) {}
+        render();
+        initHistoryUI();
+      }
 
-    const heroEl = document.getElementById('savingNum');
-    const subEl = document.getElementById('heroSub');
-    const warnEl = document.getElementById('heroWarn');
-    heroEl.textContent = yen(saving);
-    heroEl.classList.toggle('neg', saving < 0);
+      // 入力欄の今の数字を、履歴と同じ形（{income, items}）に変換する
+      function currentRecord() {
+        const items = {};
+        cats.forEach((c) => {
+          items[c.id] = num(c.id);
+        });
+        return {
+          income: num("income"),
+          items,
+          savedAt: new Date().toISOString(),
+        };
+      }
 
-    if (income === 0 && totalExp === 0){
-      subEl.textContent = '収入と支出を入れると計算されます';
-      warnEl.style.display = 'none';
-    } else if (saving < 0){
-      subEl.textContent = '';
-      warnEl.style.display = 'block';
-      warnEl.textContent = '支出が収入を ' + yen(-saving) + ' 超えています。どこを減らせるか見てみましょう。';
-    } else {
-      const rate = income > 0 ? Math.round(saving/income*100) : 0;
-      subEl.textContent = '収入の ' + rate + '% を貯金にまわせています';
-      warnEl.style.display = 'none';
-    }
+      // 「収入 − 支出の合計」＝貯金にまわせる額。今の入力にも、過去の記録にも同じ関数を使う
+      function calcSaving(rec) {
+        const items = (rec && rec.items) || {};
+        let sum = 0;
+        for (const key in items) sum += Number(items[key]) || 0;
+        return (Number(rec && rec.income) || 0) - sum;
+      }
 
-    document.getElementById('yearly').textContent = saving > 0 ? yen(saving*12) : '¥0';
+      function render() {
+        const rec = currentRecord();
+        const income = rec.income;
+        const parts = cats.map((c) => ({ ...c, val: rec.items[c.id] || 0 }));
+        const totalExp = parts.reduce((s, p) => s + p.val, 0);
+        const saving = calcSaving(rec);
 
-    const rate = income > 0 ? Math.max(0, Math.round(saving/income*100)) : 0;
-    document.getElementById('rate').textContent = rate + '%';
+        document.getElementById("totalExp").textContent = yen(totalExp);
 
-    const svg = document.getElementById('donutSvg');
-    svg.querySelectorAll('.seg').forEach(el => el.remove());
+        const heroEl = document.getElementById("savingNum");
+        const subEl = document.getElementById("heroSub");
+        const warnEl = document.getElementById("heroWarn");
+        heroEl.textContent = yen(saving);
+        heroEl.classList.toggle("neg", saving < 0);
 
-    const segs = [...parts];
-    if (saving > 0) segs.push({name:'貯金', color:'#16A34A', val:saving});
-    const base = income > 0 ? income : totalExp;
-    let offset = 0;
-    if (base > 0){
-      segs.forEach(s => {
-        if (s.val <= 0) return;
-        const frac = s.val / base;
-        const len = frac * C;
-        const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
-        circle.setAttribute('class','seg');
-        circle.setAttribute('cx','66'); circle.setAttribute('cy','66');
-        circle.setAttribute('r', R); circle.setAttribute('fill','none');
-        circle.setAttribute('stroke', s.color);
-        circle.setAttribute('stroke-width','20');
-        circle.setAttribute('stroke-dasharray', `${len} ${C-len}`);
-        circle.setAttribute('stroke-dashoffset', `${-offset}`);
-        svg.appendChild(circle);
-        offset += len;
-      });
-    }
+        if (income === 0 && totalExp === 0) {
+          subEl.textContent = "収入と支出を入れると計算されます";
+          warnEl.style.display = "none";
+        } else if (saving < 0) {
+          subEl.textContent = "";
+          warnEl.style.display = "block";
+          warnEl.textContent =
+            "支出が収入を " +
+            yen(-saving) +
+            " 超えています。どこを減らせるか見てみましょう。";
+        } else {
+          const rate = income > 0 ? Math.round((saving / income) * 100) : 0;
+          subEl.textContent = "収入の " + rate + "% を貯金にまわせています";
+          warnEl.style.display = "none";
+        }
 
-    const legend = document.getElementById('legend');
-    const legItems = [...parts];
-    if (saving > 0) legItems.push({name:'貯金にまわる', color:'#16A34A', val:saving});
-    legend.innerHTML = legItems.map(s => `
+        document.getElementById("yearly").textContent =
+          saving > 0 ? yen(saving * 12) : "¥0";
+
+        const rate =
+          income > 0 ? Math.max(0, Math.round((saving / income) * 100)) : 0;
+        document.getElementById("rate").textContent = rate + "%";
+
+        const svg = document.getElementById("donutSvg");
+        svg.querySelectorAll(".seg").forEach((el) => el.remove());
+
+        const segs = [...parts];
+        if (saving > 0)
+          segs.push({ name: "貯金", color: "#16A34A", val: saving });
+        const base = income > 0 ? income : totalExp;
+        let offset = 0;
+        if (base > 0) {
+          segs.forEach((s) => {
+            if (s.val <= 0) return;
+            const frac = s.val / base;
+            const len = frac * C;
+            const circle = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "circle",
+            );
+            circle.setAttribute("class", "seg");
+            circle.setAttribute("cx", "66");
+            circle.setAttribute("cy", "66");
+            circle.setAttribute("r", R);
+            circle.setAttribute("fill", "none");
+            circle.setAttribute("stroke", s.color);
+            circle.setAttribute("stroke-width", "20");
+            circle.setAttribute("stroke-dasharray", `${len} ${C - len}`);
+            circle.setAttribute("stroke-dashoffset", `${-offset}`);
+            svg.appendChild(circle);
+            offset += len;
+          });
+        }
+
+        const legend = document.getElementById("legend");
+        const legItems = [...parts];
+        if (saving > 0)
+          legItems.push({
+            name: "貯金にまわる",
+            color: "#16A34A",
+            val: saving,
+          });
+        legend.innerHTML = legItems
+          .map(
+            (s) => `
       <div class="leg-item">
         <span class="leg-dot" style="background:${s.color}"></span>
-        <span class="leg-name">${s.name}</span>
+        <span class="leg-name">${esc(s.name)}</span>
         <span class="leg-val">${yen(s.val)}</span>
-      </div>`).join('');
-  }
+      </div>`,
+          )
+          .join("");
+      }
 
-  ids.forEach(id => {
-    document.getElementById(id).addEventListener('input', () => { render(); save(); });
-  });
+      ids.forEach((id) => {
+        document.getElementById(id).addEventListener("input", () => {
+          render();
+          save();
+          updateRecordButton(); // 数字が変わったら「記録する／更新する」の表示も合わせる
+        });
+      });
 
-  load();
-</script>
-</body>
+      // ========== ここから履歴（月ごとの記録・貯金額の推移） ==========
+
+      // 端末のローカル時刻から "2026-09" を作る。
+      // Date.toISOString() は世界標準時（UTC）基準なので、日本時間の毎月1日 朝9時より前に使うと
+      // 「先月」のキーになってしまう。だから自分で年・月から組み立てる
+      function monthKey(d) {
+        return (
+          d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0")
+        );
+      }
+      function thisMonthKey() {
+        return monthKey(new Date());
+      }
+
+      function monthLabel(key, withYear) {
+        const p = key.split("-");
+        const y = Number(p[0]),
+          m = Number(p[1]);
+        return withYear ? y + "年" + m + "月" : m + "月";
+      }
+
+      // 万円単位の表示。アプリ内の他の数字（¥12,345）と単位をそろえるため「万」を使う（"k"は使わない）
+      function yenMan(n) {
+        const v = Math.round((Number(n) || 0) / 10000);
+        return (v < 0 ? "−" : "") + Math.abs(v) + "万";
+      }
+
+      // 履歴を読み込む。壊れていても「空」を返すが、そのときは historyBroken を立てて
+      // 記録ボタンを止める（空のまま保存されると、過去の記録が全部消えてしまうため）
+      function loadHistory() {
+        let raw = null;
+        try {
+          raw = localStorage.getItem(KEYS.history);
+        } catch (e) {
+          return {};
+        } // 保存先そのものが使えない → 履歴なし扱い（保存時にまた失敗として伝わる）
+        if (!raw) return {}; // まだ1件も記録がない、という正常な「空」
+        try {
+          const h = JSON.parse(raw);
+          if (!h || typeof h !== "object" || Array.isArray(h))
+            throw new Error("形がちがう");
+          return h;
+        } catch (e) {
+          // 中身が壊れている → 別名に退避して、記録ボタンを止める
+          try {
+            localStorage.setItem(KEYS.broken, raw);
+          } catch (e2) {}
+          historyBroken = true;
+          return {};
+        }
+      }
+
+      function saveHistory(h) {
+        try {
+          localStorage.setItem(KEYS.history, JSON.stringify(h));
+          return true;
+        } catch (e) {
+          return false;
+        } // 容量不足・プライベートブラウズなどで保存できないとき
+      }
+
+      // ---- 「記録する月」の<select> ----
+      function fillMonthSelect() {
+        const sel = document.getElementById("monthSel");
+        const now = new Date();
+        sel.innerHTML = "";
+        for (let i = 0; i < 24; i++) {
+          const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+          const key = monthKey(d);
+          const opt = document.createElement("option");
+          opt.value = key;
+          opt.textContent = monthLabel(key, true) + (i === 0 ? "（今月）" : "");
+          sel.appendChild(opt);
+        }
+        sel.value = thisMonthKey();
+      }
+
+      // 選んだ月にすでに記録があるかで、ボタンの文言と注意書きを切り替える
+      function updateRecordButton() {
+        const btn = document.getElementById("recordBtn");
+        const note = document.getElementById("recordNote");
+        const key = document.getElementById("monthSel").value;
+        const h = loadHistory();
+        const already = h[key];
+
+        if (historyBroken) {
+          btn.disabled = true;
+          note.style.display = "block";
+          note.textContent =
+            "記録を読み込めませんでした。上書きを防ぐため、記録ボタンを止めています。";
+          return;
+        }
+
+        const rec = currentRecord();
+        const totalExp = Object.values(rec.items).reduce((s, v) => s + v, 0);
+        const noInput = rec.income === 0 && totalExp === 0;
+
+        btn.disabled = noInput;
+        if (noInput) {
+          note.style.display = "block";
+          note.textContent = "先に上の欄に今月の数字を入れてください。";
+        } else if (already) {
+          btn.textContent = "この月の記録を更新する";
+          note.style.display = "block";
+          note.textContent =
+            "この月はすでに記録があります（貯金 " +
+            yen(calcSaving(already)) +
+            "）。押すと今の数字で書きかえます。";
+        } else {
+          btn.textContent = "この月を記録する";
+          note.style.display = "none";
+        }
+      }
+
+      function recordMonth() {
+        const key = document.getElementById("monthSel").value;
+        if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(key)) return; // 想定外の値は記録しない
+
+        const h = loadHistory();
+        h[key] = currentRecord();
+        const ok = saveHistory(h);
+
+        const msg = document.getElementById("recordMsg");
+        msg.style.display = "block";
+        if (ok) {
+          msg.className = "record-msg ok";
+          msg.textContent = monthLabel(key, true) + "の記録を保存しました。";
+        } else {
+          msg.className = "record-msg warn";
+          msg.textContent =
+            "記録を保存できませんでした。iPhoneの空き容量が少ないか、プライベートブラウズになっている可能性があります。";
+        }
+        updateRecordButton();
+        renderHistory();
+      }
+
+      // 過去の月の数字を、今月の入力欄に読み込む（打ち間違いを直すときに使う）
+      function loadMonthToInputs(key) {
+        const h = loadHistory();
+        const rec = h[key];
+        if (!rec) return;
+        document.getElementById("income").value = rec.income || 0;
+        cats.forEach((c) => {
+          document.getElementById(c.id).value =
+            (rec.items && rec.items[c.id]) || 0;
+        });
+        render();
+        save();
+        updateRecordButton();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      // 削除の1回目タップ：行を確認表示に切り替える。4秒操作がなければ自動で元に戻す
+      function askDelete(key) {
+        pendingDelete = key;
+        if (pendingDeleteTimer) clearTimeout(pendingDeleteTimer);
+        pendingDeleteTimer = setTimeout(() => {
+          if (pendingDelete === key) {
+            pendingDelete = null;
+            renderHistory();
+          }
+        }, 4000);
+        renderHistory();
+      }
+      function cancelDelete() {
+        pendingDelete = null;
+        if (pendingDeleteTimer) clearTimeout(pendingDeleteTimer);
+        renderHistory();
+      }
+
+      // 削除の2回目タップ：実際に消す。5秒だけ「元にもどす」を出す
+      function deleteMonth(key) {
+        if (pendingDeleteTimer) clearTimeout(pendingDeleteTimer);
+        pendingDelete = null;
+        if (selectedMonth === key) selectedMonth = null;
+
+        const h = loadHistory();
+        const rec = h[key];
+        if (!rec) {
+          renderHistory();
+          return;
+        }
+        delete h[key];
+        saveHistory(h);
+
+        if (undoRecord && undoRecord.timer) clearTimeout(undoRecord.timer);
+        undoRecord = {
+          key,
+          rec,
+          timer: setTimeout(() => {
+            undoRecord = null;
+            renderHistory();
+          }, 5000),
+        };
+
+        renderHistory();
+        updateRecordButton();
+      }
+
+      function undoDelete() {
+        if (!undoRecord) return;
+        clearTimeout(undoRecord.timer);
+        const h = loadHistory();
+        h[undoRecord.key] = undoRecord.rec;
+        saveHistory(h);
+        undoRecord = null;
+        renderHistory();
+        updateRecordButton();
+      }
+
+      // ---- 折れ線グラフ（既存の円グラフと同じく、ライブラリを使わずSVGを手で組み立てる） ----
+      function drawLineChart(svg, keys, h) {
+        while (svg.firstChild) svg.removeChild(svg.firstChild);
+        const ns = "http://www.w3.org/2000/svg";
+        const W = 320,
+          H = 170,
+          PAD_X = 28,
+          PAD_Y = 16;
+
+        const vals = keys.map((k) => calcSaving(h[k]));
+        let max = Math.max(0, ...vals); // 0を必ず含める（貯金額がすべて負のときも0の位置がわかるように）
+        let min = Math.min(0, ...vals);
+        if (max === min) max = min + 1; // 全部0・全部同額・1件だけのときに割り算で線が消えるのを防ぐ
+
+        const y = (v) => PAD_Y + ((max - v) / (max - min)) * (H - PAD_Y * 2);
+        const x = (i) =>
+          keys.length === 1
+            ? W / 2
+            : PAD_X + i * ((W - PAD_X * 2) / (keys.length - 1));
+
+        const addGridLine = (yy, isZero) => {
+          const line = document.createElementNS(ns, "line");
+          line.setAttribute("x1", PAD_X);
+          line.setAttribute("x2", W - PAD_X);
+          line.setAttribute("y1", yy);
+          line.setAttribute("y2", yy);
+          line.setAttribute("stroke", isZero ? "var(--muted)" : "var(--line)");
+          line.setAttribute("stroke-width", "1");
+          svg.appendChild(line);
+        };
+        const addLabel = (yy, text) => {
+          const t = document.createElementNS(ns, "text");
+          t.setAttribute("x", 2);
+          t.setAttribute("y", yy + 3);
+          t.setAttribute("font-size", "10");
+          t.setAttribute("fill", "var(--muted)");
+          t.textContent = text;
+          svg.appendChild(t);
+        };
+        // 目盛りは「上端・0・（マイナスがあれば下端）」の最大3本だけ
+        addGridLine(y(max), false);
+        addLabel(y(max), yenMan(max));
+        addGridLine(y(0), true);
+        addLabel(y(0), "0");
+        if (min < 0) {
+          addGridLine(y(min), false);
+          addLabel(y(min), yenMan(min));
+        }
+
+        // 横軸ラベル（7件以上は1つおきに間引く。最新の月は必ず出す。年が変わる月には年も添える）
+        const every = keys.length > 6 ? 2 : 1;
+        keys.forEach((k, i) => {
+          const isLast = i === keys.length - 1;
+          if (!isLast && (keys.length - 1 - i) % every !== 0) return;
+          const [yy, mm] = k.split("-");
+          const showYear = i === 0 || keys[i - 1].split("-")[0] !== yy;
+          const text = document.createElementNS(ns, "text");
+          text.setAttribute("x", x(i));
+          text.setAttribute("y", H - 2);
+          text.setAttribute("text-anchor", "middle");
+          text.setAttribute("font-size", "10");
+          text.setAttribute("fill", "var(--muted)");
+          text.textContent = showYear
+            ? yy.slice(2) + "/" + Number(mm)
+            : Number(mm) + "月";
+          svg.appendChild(text);
+        });
+
+        // 折れ線（2件以上のときだけ引ける）
+        if (keys.length > 1) {
+          const points = keys
+            .map((k, i) => x(i) + "," + y(calcSaving(h[k])))
+            .join(" ");
+          const line = document.createElementNS(ns, "polyline");
+          line.setAttribute("points", points);
+          line.setAttribute("fill", "none");
+          line.setAttribute("stroke", "var(--save)");
+          line.setAttribute("stroke-width", "2.5");
+          svg.appendChild(line);
+        }
+
+        // 点＋タップ判定。丸(半径14px)だと12ヶ月では間隔が狭く隣の月と重なるので、
+        // 月ごとに「縦長の透明な帯」を敷いて、どこを押しても正しい月が拾えるようにする
+        const step = keys.length > 1 ? (W - PAD_X * 2) / (keys.length - 1) : W;
+        keys.forEach((k, i) => {
+          const cx = x(i),
+            v = calcSaving(h[k]),
+            cy = y(v);
+          const isSel = selectedMonth === k;
+          const color = v < 0 ? "var(--warn)" : "var(--save)";
+
+          const dot = document.createElementNS(ns, "circle");
+          dot.setAttribute("cx", cx);
+          dot.setAttribute("cy", cy);
+          dot.setAttribute("r", isSel ? 6 : 4);
+          dot.setAttribute("fill", isSel ? "#fff" : color);
+          dot.setAttribute("stroke", color);
+          dot.setAttribute("stroke-width", isSel ? 2.5 : 0);
+          svg.appendChild(dot);
+
+          const hit = document.createElementNS(ns, "rect");
+          hit.setAttribute("x", cx - step / 2);
+          hit.setAttribute("y", 0);
+          hit.setAttribute("width", step);
+          hit.setAttribute("height", H);
+          hit.setAttribute("fill", "transparent"); // fill="none" だとタップに反応しないので transparent にする
+          hit.setAttribute("data-month", k);
+          svg.appendChild(hit);
+        });
+      }
+
+      // ---- グラフ＋月の一覧をまとめて描き直す ----
+      // 呼ぶのは「起動時・記録時・削除時・選択時」だけ。入力のたびには呼ばない（無駄な描き直しを避けるため）
+      function renderHistory() {
+        const h = loadHistory();
+        const keys = Object.keys(h).sort(); // 0埋めのYYYY-MM文字列なので、並べ替えるだけで時系列順になる
+        const chartKeys = keys.slice(-12); // グラフは直近12ヶ月まで
+        const chartArea = document.getElementById("histChartArea");
+        const listArea = document.getElementById("histListArea");
+
+        if (historyBroken) {
+          chartArea.innerHTML = `<div class="empty">記録を読み込めませんでした。以前保存したデータが壊れてしまったようです。新しく記録しなおしてください。</div>`;
+          listArea.innerHTML = "";
+          return;
+        }
+
+        if (chartKeys.length === 0) {
+          chartArea.innerHTML = `<div class="empty">まだ記録がありません。<br>上の「この月を記録する」を押すと、ここに毎月の貯金額がたまっていきます。</div>`;
+          listArea.innerHTML = "";
+          return;
+        }
+
+        chartArea.innerHTML = `
+      <svg viewBox="0 0 320 170" class="linechart" id="histSvg"></svg>
+      ${chartKeys.length === 1 ? '<div class="hist-note">2か月目を記録すると、線でつながって推移が見えます。</div>' : ""}
+      ${keys.length > 12 ? '<div class="hist-note">直近12ヶ月を表示しています</div>' : ""}
+    `;
+        drawLineChart(document.getElementById("histSvg"), chartKeys, h);
+
+        // 一覧は新しい月が上。既定は直近3件、「すべて見る」で全件
+        const listKeys = [...keys].reverse();
+        const shown = showAllHistory ? listKeys : listKeys.slice(0, 3);
+
+        let html = '<div class="hist-list">';
+        if (undoRecord) {
+          html += `<div class="hist-undo"><span>${esc(monthLabel(undoRecord.key, true))}の記録を消しました</span><button type="button" onclick="undoDelete()">元にもどす</button></div>`;
+        }
+        shown.forEach((key) => {
+          const rec = h[key];
+          const saving = calcSaving(rec);
+          const isNeg = saving < 0;
+
+          if (pendingDelete === key) {
+            html += `
+          <div class="hist-confirm">
+            <span>${esc(monthLabel(key, true))}の記録を消します</span>
+            <div class="hist-confirm-btns">
+              <button type="button" class="btn-sm" onclick="cancelDelete()">やめる</button>
+              <button type="button" class="btn-warn" onclick="deleteMonth('${key}')">消す</button>
+            </div>
+          </div>`;
+            return;
+          }
+
+          html += `
+        <div class="hist-row">
+          <button type="button" class="hist-row-main" onclick="selectedMonth = (selectedMonth==='${key}'?null:'${key}'); renderHistory();">
+            <span class="hist-month">${esc(monthLabel(key, true))}</span>
+            <span class="hist-val${isNeg ? " warn" : ""}">${yen(saving)}</span>
+          </button>
+          <button type="button" class="hist-del" aria-label="この月の記録を削除" onclick="askDelete('${key}')">×</button>
+        </div>`;
+
+          if (selectedMonth === key) {
+            const detailRows = cats
+              .map(
+                (c) => `
+            <div class="hist-detail-row"><span>${esc(c.name)}</span><span class="hist-detail-val">${yen(rec.items[c.id] || 0)}</span></div>`,
+              )
+              .join("");
+            html += `
+          <div class="hist-detail">
+            <div class="hist-detail-row"><span>収入</span><span class="hist-detail-val">${yen(rec.income || 0)}</span></div>
+            ${detailRows}
+            <div class="hist-detail-row"><span>貯金にまわせた額</span><span class="hist-detail-val">${yen(saving)}</span></div>
+            <div class="hist-actions">
+              <button type="button" class="btn-sm" onclick="loadMonthToInputs('${key}')">この月の数字を入力欄に入れる</button>
+            </div>
+          </div>`;
+          }
+        });
+        html += "</div>";
+        if (!showAllHistory && listKeys.length > 3) {
+          html += `<button type="button" class="hist-more" onclick="showAllHistory=true;renderHistory()">すべて見る（${listKeys.length}件）</button>`;
+        }
+        listArea.innerHTML = html;
+      }
+
+      // グラフの点（透明な帯）をタップしたときの処理。
+      // innerHTML で組み立てる作りなので、要素ごとにリスナーは付けられない → 親要素1つで受ける
+      document.getElementById("historyCard").addEventListener("click", (e) => {
+        const hit = e.target.closest("[data-month]");
+        if (!hit) return;
+        const key = hit.getAttribute("data-month");
+        selectedMonth = selectedMonth === key ? null : key;
+        renderHistory();
+      });
+
+      function initHistoryUI() {
+        fillMonthSelect();
+        updateRecordButton();
+        document
+          .getElementById("monthSel")
+          .addEventListener("change", updateRecordButton);
+        document
+          .getElementById("recordBtn")
+          .addEventListener("click", recordMonth);
+        renderHistory();
+      }
+
+      load();
+    </script>
+  </body>
 </html>
